@@ -44,7 +44,7 @@ class SFMLConanFile(ConanFile):
     default_options = "shared=True"
     generators = "cmake"
     license = "zlib/png"
-    url = "http://github.com/cpbotha/conan-sfml"
+    url = "http://github.com/diegostamigni/conan-sfml"
     exports = ["CMakeLists.txt"]
     ZIP_FOLDER_NAME = "SFML-2.4.0"
     so_version = '2.4'
@@ -52,7 +52,7 @@ class SFMLConanFile(ConanFile):
     def source(self):
         tgz_name = "2.4.0.tar.gz"
         download("https://github.com/SFML/SFML/archive/%s" % tgz_name, tgz_name)
-        check_sha256(tgz_name, "55e7c864938e03ceb7d6d05c66f8e0dc886e632805d0ae17c222da317ba14e4c")
+        check_sha256(tgz_name, "712da18445a1dcbb717b010d9b19889222c95b6632c343457aa61712cbe1d76b")
         # unzip falls back to untargz in the case of tar.gz extension
         unzip(tgz_name)
         os.unlink(tgz_name)
