@@ -1,5 +1,5 @@
 # sfml conanfile - modified by cpbotha from original by TyRoXx
-# * use SFML-2.3.2
+# * use SFML-2.4.0
 # * use tarball instead of zip to work-around symlink bug
 #   https://github.com/conan-io/conan/issues/336
 
@@ -37,7 +37,7 @@ index 6f02fb6..bdc84e7 100644
 
 class SFMLConanFile(ConanFile):
     name = "sfml"
-    version = "2.3.2"
+    version = "2.4.0"
     branch = "stable"
     settings = "os", "compiler", "arch", "build_type"
     options = {"shared": [True, False]}
@@ -46,11 +46,11 @@ class SFMLConanFile(ConanFile):
     license = "zlib/png"
     url = "http://github.com/cpbotha/conan-sfml"
     exports = ["CMakeLists.txt"]
-    ZIP_FOLDER_NAME = "SFML-2.3.2"
-    so_version = '2.3'
+    ZIP_FOLDER_NAME = "SFML-2.4.0"
+    so_version = '2.4'
 
     def source(self):
-        tgz_name = "2.3.2.tar.gz"
+        tgz_name = "2.4.0.tar.gz"
         download("https://github.com/SFML/SFML/archive/%s" % tgz_name, tgz_name)
         check_sha256(tgz_name, "55e7c864938e03ceb7d6d05c66f8e0dc886e632805d0ae17c222da317ba14e4c")
         # unzip falls back to untargz in the case of tar.gz extension
@@ -87,7 +87,7 @@ class SFMLConanFile(ConanFile):
 
     def package_info(self):
         if (not self.settings.os == "Windows") and self.options.shared:
-            # on Macos, we do e.g. -lsfml-audio.2.3 to link to libsfml-audio.2.3.dylib
+            # on Macos, we do e.g. -lsfml-audio.2.4 to link to libsfml-audio.2.4.dylib
             # on Linux, it's just -lsfml-audio to link to libsfml-audio.so which is a symlink
             # using platform.system() instead of self.settings.os here
             # to work around https://github.com/conan-io/conan/issues/338
