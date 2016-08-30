@@ -9,6 +9,7 @@ from conans.tools import download, unzip, check_sha256
 from conans import CMake
 import platform
 
+
 class SFMLConanFile(ConanFile):
     name = "sfml"
     version = "2.4.0"
@@ -25,8 +26,10 @@ class SFMLConanFile(ConanFile):
 
     def source(self):
         tgz_name = "2.4.0.tar.gz"
-        download("https://github.com/SFML/SFML/archive/%s" % tgz_name, tgz_name)
-        check_sha256(tgz_name, "712da18445a1dcbb717b010d9b19889222c95b6632c343457aa61712cbe1d76b")
+        download("https://github.com/SFML/SFML/archive/%s" %
+                 tgz_name, tgz_name)
+        check_sha256(
+            tgz_name, "712da18445a1dcbb717b010d9b19889222c95b6632c343457aa61712cbe1d76b")
         # unzip falls back to untargz in the case of tar.gz extension
         unzip(tgz_name)
         os.unlink(tgz_name)
@@ -38,12 +41,15 @@ class SFMLConanFile(ConanFile):
         # for SFML to work, you'll probably have to copy the sfml extlibs
         # frameworks manually into /Library/Frameworks
         self.run('cd _build && cmake ../%s -DBUILD_SHARED_LIBS=%s -DCMAKE_INSTALL_PREFIX=../install -DCMAKE_INSTALL_FRAMEWORK_PREFIX=../install/Frameworks %s' %
-            (self.ZIP_FOLDER_NAME, "ON" if self.options.shared else "OFF", cmake.command_line)
-        )
+                 (self.ZIP_FOLDER_NAME,
+                  "ON" if self.options.shared else "OFF", cmake.command_line)
+                 )
         if self.settings.os == "Windows":
-            self.run("cd _build && cmake --build . %s --target install --config %s" % (cmake.build_config, self.settings.build_type))
+            self.run("cd _build && cmake --build . %s --target install --config %s" %
+                     (cmake.build_config, self.settings.build_type))
         else:
-            self.run("cd _build && cmake --build . %s -- -j2 install" % cmake.build_config)
+            self.run("cd _build && cmake --build . %s -- -j2 install" %
+                     cmake.build_config)
 
     def package(self):
         self.copy("*.*", "include", "install/include", keep_path=True)
@@ -56,7 +62,8 @@ class SFMLConanFile(ConanFile):
         #self.copy(pattern="*.so." + self.so_version, dst="lib", src="install/lib", keep_path=False)
         #self.copy(pattern="*.lib", dst="lib", src="install/lib", keep_path=False)
         #self.copy(pattern="*.dylib", dst="lib", src="install/lib", keep_path=False)
-        self.copy(pattern="*.dll", dst="bin", src="install/lib", keep_path=False)
+        self.copy(pattern="*.dll", dst="bin",
+                  src="install/lib", keep_path=False)
 
     def package_info(self):
         if (not self.settings.os == "Windows") and self.options.shared:
@@ -69,18 +76,22 @@ class SFMLConanFile(ConanFile):
             else:
                 so_version = '.' + self.so_version
 
-            self.cpp_info.libs = map(
-                lambda name: name + ('-d' if self.settings.build_type == "Debug" else '') + so_version,
-                ['sfml-audio', 'sfml-graphics', 'sfml-network', 'sfml-window', 'sfml-system']
-            )
+            self.cpp_info.libs = list(map(
+                lambda name: name +
+                ('-d' if self.settings.build_type == "Debug" else '') + so_version,
+                ['sfml-audio', 'sfml-graphics', 'sfml-network',
+                    'sfml-window', 'sfml-system']
+            ))
         else:
-            self.cpp_info.libs = map(
-                lambda name: name + ('-d' if self.settings.build_type == "Debug" else ''),
+            self.cpp_info.libs = list(map(
+                lambda name: name +
+                ('-d' if self.settings.build_type == "Debug" else ''),
                 map(
                     lambda name: name + ('' if self.options.shared else '-s'),
-                    ['sfml-audio', 'sfml-graphics', 'sfml-network', 'sfml-window', 'sfml-system']
+                    ['sfml-audio', 'sfml-graphics', 'sfml-network',
+                        'sfml-window', 'sfml-system']
                 )
-            )
+            ))
         if not self.settings.os == "Windows":
             self.cpp_info.libs.append("pthread")
             self.cpp_info.libs.append("dl")
